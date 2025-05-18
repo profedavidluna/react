@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop API</title>
+    <style>
+        #draggable {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            border: 1px solid blue;
+            cursor: grab;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #dropzone {
+            width: 200px;
+            height: 150px;
+            border: 2px dashed green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .drag-over {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <h2>Arrastrar y Soltar</h2>
+    <div id="draggable" draggable="true">Arrastrar</div>
+    <div id="dropzone">Soltar aquí</div>
+    <div id="mensaje"></div>
+
+    <script>
+        const draggable = document.getElementById('draggable');
+        const dropzone = document.getElementById('dropzone');
+        const mensajeDiv = document.getElementById('mensaje');
+
+        draggable.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text/plain', 'Elemento arrastrado');
+        });
+
+        dropzone.addEventListener('dragover', function(event) {
+            event.preventDefault(); // Permite soltar
+            this.classList.add('drag-over');
+        });
+
+        dropzone.addEventListener('dragleave', function() {
+            this.classList.remove('drag-over');
+        });
+
+        dropzone.addEventListener('drop', function(event) {
+            event.preventDefault();
+            this.classList.remove('drag-over');
+            const data = event.dataTransfer.getData('text/plain');
+            mensajeDiv.textContent = 'Se soltó: ' + data;
+        });
+    </script>
+</body>
+</html>

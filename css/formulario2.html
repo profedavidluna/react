@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitud de Préstamo - BCR</title>
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="form-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Solicitud de Préstamo Personal</h1>
+        </header>
+
+        <main>
+            <form id="loan-application" class="loan-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cedula">Cédula:</label>
+                        <input type="text" id="cedula" pattern="\d{9}" 
+                               title="Ingrese su cédula (9 dígitos)" required>
+                        <span class="helper-text">Formato: 9 dígitos sin guiones</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Teléfono:</label>
+                        <input type="tel" id="phone" pattern="[0-9]{8}" 
+                               title="8 dígitos sin guiones" required>
+                        <span class="helper-text">8 dígitos sin guiones</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="amount">Monto solicitado (₡):</label>
+                        <input type="number" id="amount" min="100000" max="50000000" 
+                               step="50000" required>
+                        <div class="range-info">Mínimo: ₡100,000 - Máximo: ₡50,000,000</div>
+                    </div>
+                    
+                    <div class="form-group range-group">
+                        <label for="term">Plazo (meses): <output for="term" id="term-value">36</output></label>
+                        <input type="range" id="term" min="12" max="60" value="36">
+                        <div class="range-labels">
+                            <span>12</span>
+                            <span>60</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="income">Ingreso mensual (₡):</label>
+                        <input type="number" id="income" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="submit-date">Fecha de solicitud:</label>
+                        <input type="date" id="submit-date" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">Acepto los términos y condiciones del préstamo</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn">Enviar Solicitud</button>
+                    <button type="reset" class="btn outline">Limpiar Formulario</button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p>¿Necesitas ayuda? Llámanos al 2211-1111</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('term').addEventListener('input', function() {
+            document.getElementById('term-value').value = this.value;
+        });
+    </script>
+</body>
+</html>

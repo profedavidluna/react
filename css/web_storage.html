@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Ahorros - BCR</title>
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="savings-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Simulador de Plan de Ahorros</h1>
+            <p>Planifica tus metas financieras con nuestra herramienta interactiva</p>
+        </header>
+        
+        <main class="savings-app">
+            <div class="savings-form">
+                <h2><i class="icon">📝</i> Nueva Meta de Ahorro</h2>
+                
+                <div class="form-group">
+                    <label for="goal-name">Nombre de la meta:</label>
+                    <input type="text" id="goal-name" placeholder="Ej: Vacaciones, Carro nuevo...">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goal-amount">Monto objetivo (₡):</label>
+                        <input type="number" id="goal-amount" placeholder="Ej: 1000000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="monthly-save">Ahorro mensual (₡):</label>
+                        <input type="number" id="monthly-save" placeholder="Ej: 50000">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button id="save-btn" class="btn">Guardar Simulación</button>
+                    <button id="clear-btn" class="btn outline">Limpiar Datos</button>
+                </div>
+            </div>
+            
+            <div class="savings-results">
+                <h2><i class="icon">📊</i> Tus Planes de Ahorro</h2>
+                
+                <div class="results-container">
+                    <div class="empty-state" id="empty-state">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3392/3392986.png" alt="No hay datos" width="100">
+                        <h3>No tienes metas de ahorro aún</h3>
+                        <p>Crea tu primera meta usando el formulario</p>
+                    </div>
+                    
+                    <ul id="savings-list" class="savings-list"></ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const goal = {
+                name: document.getElementById('goal-name').value,
+                amount: document.getElementById('goal-amount').value,
+                monthly: document.getElementById('monthly-save').value,
+                date: new Date().toLocaleDateString()
+            };
+            
+            if (!goal.name || !goal.amount || !goal.monthly) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+            
+            let savings = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            savings.push(goal);
+            localStorage.setItem('savingsGoals', JSON.stringify(savings));
+            
+            updateList();
+            
+            // Limpiar formulario
+            document.getElementById('goal-name').value = '';
+            document.getElementById('goal-amount').value = '';
+            document.getElementById('monthly-save').value = '';
+        });
+        
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm('¿Estás seguro de querer eliminar todos tus planes de ahorro?')) {
+                localStorage.removeItem('savingsGoals');
+                updateList();
+            }
+        });
+        
+        function updateList() {
+            const list = document.getElementById('savings-list');
+            const emptyState = document.getElementById('empty-state');
+            list.innerHTML = '';
+            
+            const savings = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            
+            if (savings.length === 0) {
+                emptyState.style.display = 'flex';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            savings.forEach((goal, index) => {
+                const months = Math.ceil(goal.amount / goal.monthly);
+                const completionDate = new Date();
+                completionDate.setMonth(completionDate.getMonth() + months);
+                
+                const li = document.createElement('li');
+                li.className = 'savings-item';
+                li.innerHTML = `
+                    <div class="savings-header">
+                        <h3>${goal.name}</h3>
+                        <span class="delete-btn" data-index="${index}">×</span>
+                    </div>
+                    <div class="savings-body">
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${Math.min(100, months)}%"></div>
+                        </div>
+                        <div class="savings-details">
+                            <div>
+                                <small>Monto objetivo</small>
+                                <p>₡${Number(goal.amount).toLocaleString()}</p>
+                            </div>
+                            <div>
+                                <small>Ahorro mensual</small>
+                                <p>₡${Number(goal.monthly).toLocaleString()}</p>
+                            </div>
+                            <div>
+                                <small>Tiempo estimado</small>
+                                <p>${months} meses</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="savings-footer">
+                        <small>Creado: ${goal.date}</small>
+                        <small>Completado: ${completionDate.toLocaleDateString()}</small>
+                    </div>
+                `;
+                
+                list.appendChild(li);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteGoal(index);
+                });
+            });
+        }
+        
+        function deleteGoal(index) {
+            let savings = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            savings.splice(index, 1);
+            localStorage.setItem('savingsGoals', JSON.stringify(savings));
+            updateList();
+        }
+        
+        // Cargar datos al iniciar
+        updateList();
+    </script>
+</body>
+</html>

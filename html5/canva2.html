@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas API</title>
+    <style>
+        #miCanvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h2>Gráfico Simple con Canvas</h2>
+    <canvas id="miCanvas" width="200" height="150"></canvas>
+
+    <script>
+        const canvas = document.getElementById('miCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Datos de ejemplo (podrían ser tasas de interés, etc.)
+        const datos = [50, 80, 30, 120, 70];
+        const etiquetas = ['Ene', 'Feb', 'Mar', 'Abr', 'May'];
+        const barWidth = 30;
+        const startX = 20;
+        const maxY = Math.max(...datos);
+        const scale = canvas.height / maxY;
+
+        ctx.fillStyle = 'navy';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+
+        for (let i = 0; i < datos.length; i++) {
+            const barHeight = datos[i] * scale;
+            const x = startX + i * (barWidth + 10);
+            const y = canvas.height - barHeight;
+
+            ctx.fillRect(x, y, barWidth, barHeight);
+            ctx.fillText(etiquetas[i], x + barWidth / 2, canvas.height - 5);
+            ctx.fillText(datos[i], x + barWidth / 2, y - 5);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto Personal - Banco CR</title>
+    <style>
+        :root {
+            --primary-color: #005f73;
+            --secondary-color: #0a9396;
+            --accent-color: #ee9b00;
+            --light-color: #e9ecef;
+            --dark-color: #343a40;
+            --error-color: #d62828;
+            --success-color: #2a9d8f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .bank-logo {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 5px rgba(10, 147, 150, 0.5);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--dark-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--error-color);
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .transaction-list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .transaction-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-item .details {
+            flex: 1;
+        }
+        
+        .transaction-item .amount {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .transaction-item .amount.income {
+            color: var(--success-color);
+        }
+        
+        .transaction-item .amount.expense {
+            color: var(--error-color);
+        }
+        
+        .transaction-item .actions {
+            margin-left: 10px;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid var(--light-color);
+        }
+        
+        .summary-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .summary-item .label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .summary-item .value.positive {
+            color: var(--success-color);
+        }
+        
+        .summary-item .value.negative {
+            color: var(--error-color);
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: white;
+            background-color: var(--secondary-color);
+            margin-right: 5px;
+        }
+        
+        .filter-bar {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-bar select {
+            flex: 1;
+        }
+        
+        #chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .storage-info {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .demo-controls {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="/api/placeholder/200/100" alt="Banco Costa Rica Logo" class="bank-logo">
+            <h1>Presupuesto Personal</h1>
+            <p>Administre sus finanzas personales y establezca metas de ahorro</p>
+        </header>
+        
+        <div class="dashboard">
+            <!-- Panel Izquierdo: Formulario y Estadísticas -->
+            <div>
+                <div class="card">
+                    <h2>Agregar Transacción</h2>
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label for="transaction-type">Tipo:</label>
+                            <select id="transaction-type" required>
+                                <option value="income">Ingreso</option>
+                                <option value="expense">Gasto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="transaction-amount">Monto (₡):</label>
+                            <input type="number" id="transaction-amount" min="1" step="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="transaction-category">Categoría:</label>
+                            <select id="transaction-category" required>
+                                <!-- Categorías dinámicas según el tipo seleccionado -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="transaction-description">Descripción:</label>
+                            <input type="text" id="transaction-description" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="transaction-date">Fecha:</label>
+                            <input type="date" id="transaction-date" required>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit">Guardar</button>
+                            <button type="button" id="clear-form" class="btn-secondary">Limpiar</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h2>Resumen</h2>
+                    <div class="summary">
+                        <div class="summary-item">
+                            <div class="label">Ingresos</div>
+                            <div class="value positive" id="total-income">₡0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Gastos</div>
+                            <div class="value negative" id="total-expenses">₡0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Balance</div>
+                            <div class="value" id="total-balance">₡0</div>
+                        </div>
+                    </div>
+                    
+                    <div id="chart-container">
+                        <!-- Aquí se insertará el gráfico -->
+                    </div>
+                </div>
+                
+                <div class="demo-controls">
+                    <h3>Control de Datos</h3>
+                    <p>Estas funciones demuestran el manejo del almacenamiento local:</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button id="save-session" class="btn-secondary">Guardar en sessionStorage</button>
+                        <button id="export-data" class="btn-secondary">Exportar Datos</button>
+                        <button id="clear-data" class="btn-danger">Borrar Todos los Datos</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel Derecho: Lista de Transacciones -->
+            <div>
+                <div class="card">
+                    <h2>Transacciones</h2>
+                    
+                    <div class="filter-bar">
+                        <select id="filter-type">
+                            <option value="all">Todos los tipos</option>
+                            <option value="income">Solo ingresos</option>
+                            <option value="expense">Solo gastos</option>
+                        </select>
+                        
+                        <select id="filter-category">
+                            <option value="all">Todas las categorías</option>
+                        </select>
+                    </div>
+                    
+                    <ul class="transaction-list" id="transactions-list">
+                        <!-- Las transacciones se cargarán dinámicamente -->
+                        <li class="transaction-item">
+                            <div class="details">
+                                <div><strong>Cargando datos...</strong></div>
+                                <div>Verificando almacenamiento local</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="storage-info">
+                    <h3>Información del Almacenamiento</h3>
+                    <div id="storage-status">Verificando compatibilidad con localStorage...</div>
+                    <div id="storage-usage">Uso actual: Calculando...</div>
+                    <div id="last-update">Última actualización: --</div>
+                    <div id="session-status">Estado de la sesión: --</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Categorías predefinidas
+        const categories = {
+            income: ['Salario', 'Intereses', 'Inversiones', 'Alquiler', 'Bonificación', 'Otros'],
+            expense: ['Alimentación', 'Vivienda', 'Transporte', 'Servicios', 'Entretenimiento', 'Salud', 'Educación', 'Ropa', 'Deudas', 'Otros']
+        };
+        
+        // Clases para el manejo de datos
+        class Transaction {
+            constructor(type, amount, category, description, date) {
+                this.id = Date.now().toString();
+                this.type = type;
+                this.amount = parseFloat(amount);
+                this.category = category;
+                this.description = description;
+                this.date = date;
+                this.createdAt = new Date().toISOString();
+            }
+        }
+        
+        class BudgetManager {
+            constructor() {
+                this.transactions = [];
+                this.storageAvailable = this.checkStorageAvailability('localStorage');
+                this.sessionAvailable = this.checkStorageAvailability('sessionStorage');
+                this.updateStorageInfo();
+            }
+            
+            // Verificar disponibilidad de storage
+            checkStorageAvailability(type) {
+                try {
+                    const storage = window[type];
+                    const x = '__storage_test__';
+                    storage.setItem(x, x);
+                    storage.removeItem(x);
+                    return true;
+                } catch(e) {
+                    return false;
+                }
+            }
+            
+            // Cargar datos del localStorage
+            loadFromStorage() {
+                if (!this.storageAvailable) return;
+                
+                const savedTransactions = localStorage.getItem('budgetTransactions');
+                if (savedTransactions) {
+                    this.transactions = JSON.parse(savedTransactions);
+                    this.updateLastSaved();
+                }
+            }
+            
+            // Guardar datos en localStorage
+            saveToStorage() {
+                if (!this.storageAvailable) return;
+                
+                localStorage.setItem('budgetTransactions', JSON.stringify(this.transactions));
+                this.updateLastSaved();
+                this.updateStorageInfo();
+            }
+            
+            // Guardar datos en sessionStorage (temporal)
+            saveToSession() {
+                if (!this.sessionAvailable) return;
+                
+                sessionStorage.setItem('budgetTransactions', JSON.stringify(this.transactions));
+                document.getElementById('session-status').textContent = 'Estado de la sesión: Datos guardados temporalmente';
+            }
+            
+            // Actualizar información del almacenamiento
+            updateStorageInfo() {
+                const statusElement = document.getElementById('storage-status');
+                const usageElement = document.getElementById('storage-usage');
+                
+                if (this.storageAvailable) {
+                    statusElement.textContent = 'localStorage disponible y funcionando correctamente';
+                    statusElement.style.color = 'var(--success-color)';
+                    
+                    // Calcular uso aproximado
+                    let totalSize = 0;
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        totalSize += (key.length + value.length) * 2; // Aproximado para UTF-16
+                    }
+                    
+                    const sizeInKB = (totalSize / 1024).toFixed(2);
+                    usageElement.textContent = `Uso actual: ${sizeInKB} KB de ~5MB (${(totalSize / 5242880 * 100).toFixed(2)}%)`;
+                } else {
+                    statusElement.textContent = 'localStorage no disponible en este navegador';
+                    statusElement.style.color = 'var(--error-color)';
+                    usageElement.textContent = 'No se puede calcular el uso';
+                }
+            }
+            
+            // Actualizar la última vez que se guardaron datos
+            updateLastSaved() {
+                document.getElementById('last-update').textContent = 
+                    `Última actualización: ${new Date().toLocaleString('es-CR')}`;
+            }
+            
+            // Añadir una nueva transacción
+            addTransaction(transaction) {
+                this.transactions.push(transaction);
+                this.saveToStorage();
+                return transaction;
+            }
+            
+            // Eliminar una transacción
+            removeTransaction(id) {
+                this.transactions = this.transactions.filter(t => t.id !== id);
+                this.saveToStorage();
+            }
+            
+            // Obtener todas las transacciones (con filtros opcionales)
+            getTransactions(filterType = 'all', filterCategory = 'all') {
+                return this.transactions.filter(t => {
+                    if (filterType !== 'all' && t.type !== filterType) return false;
+                    if (filterCategory !== 'all' && t.category !== filterCategory) return false;
+                    return true;
+                }).sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            
+            // Calcular totales
+            calculateTotals() {
+                const totals = {
+                    income: 0,
+                    expense: 0,
+                    balance: 0
+                };
+                
+                this.transactions.forEach(t => {
+                    if (t.type === 'income') {
+                        totals.income += t.amount;
+                    } else {
+                        totals.expense += t.amount;
+                    }
+                });
+                
+                totals.balance = totals.income - totals.expense;
+                return totals;
+            }
+            
+            // Exportar datos como JSON
+            exportData() {
+                const data = JSON.stringify(this.transactions, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `presupuesto_personal_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            // Borrar todos los datos
+            clearAllData() {
+                if (confirm('¿Está seguro que desea borrar todos los datos? Esta acción no se puede deshacer.')) {
+                    this.transactions = [];
+                    localStorage.removeItem('budgetTransactions');
+                    sessionStorage.removeItem('budgetTransactions');
+                    this.updateStorageInfo();
+                    document.getElementById('session-status').textContent = 'Estado de la sesión: Vacío';
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        // Formatear montos como moneda
+        function formatCurrency(amount) {
+            return '₡' + parseFloat(amount).toLocaleString('es-CR');
+        }
+        
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            const budgetManager = new BudgetManager();
+            const transactionForm = document.getElementById('transaction-form');
+            const transactionType = document.getElementById('transaction-type');
+            const categorySelect = document.getElementById('transaction-category');
+            const transactionsList = document.getElementById('transactions-list');
+            const filterType = document.getElementById('filter-type');
+            const filterCategory = document.getElementById('filter-category');
+            
+            // Establecer la fecha actual por defecto
+            document.getElementById('transaction-date').valueAsDate = new Date();
+            
+            // Actualizar categorías según el tipo seleccionado
+            function updateCategories() {
+                const type = transactionType.value;
+                categorySelect.innerHTML = '';
+                
+                categories[type].forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+            }
+            
+            // Actualizar las categorías en el filtro
+            function updateFilterCategories() {
+                const filter = document.getElementById('filter-category');
+                filter.innerHTML = '<option value="all">Todas las categorías</option>';
+                
+                // Agregar categorías de ingresos
+                if (filterType.value === 'all' || filterType.value === 'income') {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = 'Ingresos';
+                    categories.income.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat;
+                        option.textContent = cat;
+                        optgroup.appendChild(option);
+                    });
+                    filter.appendChild(optgroup);
+                }
+                
+                // Agregar categorías de gastos
+                if (filterType.value === 'all' || filterType.value === 'expense') {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = 'Gastos';
+                    categories.expense.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat;
+                        option.textContent = cat;
+                        optgroup.appendChild(option);
+                    });
+                    filter.appendChild(optgroup);
+                }
+            }
+            
+            // Renderizar la lista de transacciones
+            function renderTransactions() {
+                const transactions = budgetManager.getTransactions(
+                    filterType.value, 
+                    filterCategory.value
+                );
+                
+                transactionsList.innerHTML = '';
+                
+                if (transactions.length === 0) {
+                    transactionsList.innerHTML = `
+                        <li class="transaction-item">
+                            <div class="details">
+                                <div><strong>No hay transacciones</strong></div>
+                                <div>Añada una nueva transacción para comenzar</div>
+                            </div>
+                        </li>
+                    `;
+                    return;
+                }
+                
+                transactions.forEach(transaction => {
+                    const li = document.createElement('li');
+                    li.className = 'transaction-item';
+                    
+                    const dateFormatted = new Date(transaction.date).toLocaleDateString('es-CR');
+                    
+                    li.innerHTML = `
+                        <div class="details">
+                            <div>
+                                <strong>${transaction.description}</strong>
+                                <span class="category-tag">${transaction.category}</span>
+                            </div>
+                            <div>${dateFormatted}</div>
+                        </div>
+                        <div class="amount ${transaction.type}">
+                            ${transaction.type === 'income' ? '+' : '-'}${formatCurrency(transaction.amount)}
+                        </div>
+                        <div class="actions">
+                            <button class="btn-danger btn-action delete-btn" data-id="${transaction.id}">Eliminar</button>
+                        </div>
+                    `;
+                    
+                    transactionsList.appendChild(li);
+                });
+                
+                // Añadir eventos de eliminación
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        budgetManager.removeTransaction(id);
+                        renderTransactions();
+                        updateSummary();
+                    });
+                });
+            }
+            
+            // Actualizar el resumen y totales
+            function updateSummary() {
+                const totals = budgetManager.calculateTotals();
+                
+                document.getElementById('total-income').textContent = formatCurrency(totals.income);
+                document.getElementById('total-expenses').textContent = formatCurrency(totals.expense);
+                
+                const balanceElement = document.getElementById('total-balance');
+                balanceElement.textContent = formatCurrency(totals.balance);
+                balanceElement.className = 'value ' + (totals.balance >= 0 ? 'positive' : 'negative');
+                
+                // Renderizar gráfico simple
+                renderSimpleChart(totals);
+            }
+            
+            // Crear un gráfico simple con barras
+            function renderSimpleChart(totals) {
+                const chartContainer = document.getElementById('chart-container');
+                chartContainer.innerHTML = '';
+                
+                const maxValue = Math.max(totals.income, totals.expense);
+                
+                const chart = document.createElement('div');
+                chart.style.display = 'flex';
+                chart.style.height = '250px';
+                chart.style.alignItems = 'flex-end';
+                chart.style.justifyContent = 'space-around';
+                chart.style.padding = '10px';
+                
+                // Barra de ingresos
+                const incomeBar = document.createElement('div');
+                incomeBar.style.width = '80px';
+                incomeBar.style.height = maxValue ? (totals.income / maxValue * 200) + 'px' : '0';
+                incomeBar.style.backgroundColor = 'var(--success-color)';
+                incomeBar.style.position = 'relative';
+                incomeBar.style.transition = 'height 0.3s';
+                
+                const incomeLabel = document.createElement('div');
+                incomeLabel.textContent = 'Ingresos';
+                incomeLabel.style.textAlign = 'center';
+                incomeLabel.style.marginTop = '5px';
+                
+                const incomeValue = document.createElement('div');
+                incomeValue.textContent = formatCurrency(totals.income);
+                incomeValue.style.position = 'absolute';
+                incomeValue.style.bottom = '5px';
+                incomeValue.style.left = '0';
+                incomeValue.style.right = '0';
+                incomeValue.style.textAlign = 'center';
+                incomeValue.style.color = 'white';
+                incomeValue.style.fontWeight = 'bold';
+                
+                incomeBar.appendChild(incomeValue);
+                
+                // Barra de gastos
+                const expenseBar = document.createElement('div');
+                expenseBar.style.width = '80px';
+                expenseBar.style.height = maxValue ? (totals.expense / maxValue * 200) + 'px' : '0';
+                expenseBar.style.backgroundColor = 'var(--error-color)';
+                expenseBar.style.position = 'relative';
+                expenseBar.style.transition = 'height 0.3s';
+                
+                const expenseLabel = document.createElement('div');
+                expenseLabel.textContent = 'Gastos';
+                expenseLabel.style.textAlign = 'center';
+                expenseLabel.style.marginTop = '5px';
+                
+                const expenseValue = document.createElement('div');
+                expenseValue.textContent = formatCurrency(totals.expense);
+                expenseValue.style.position = 'absolute';
+                expenseValue.style.bottom = '5px';
+                expenseValue.style.left = '0';
+                expenseValue.style.right = '0';
+                expenseValue.style.textAlign = 'center';
+                expenseValue.style.color = 'white';
+                expenseValue.style.fontWeight = 'bold';
+                
+                expenseBar.appendChild(expenseValue);
+                
+                // Crear columnas
+                const incomeColumn = document.createElement('div');
+                incomeColumn.style.display = 'flex';
+                incomeColumn.style.flexDirection = 'column';
+                incomeColumn.appendChild(incomeBar);
+                incomeColumn.appendChild(incomeLabel);
+                
+                const expenseColumn = document.createElement('div');
+                expenseColumn.style.display = 'flex';
+                expenseColumn.style.flexDirection = 'column';
+                expenseColumn.appendChild(expenseBar);
+                expenseColumn.appendChild(expenseLabel);
+                
+                chart.appendChild(incomeColumn);
+                chart.appendChild(expenseColumn);
+                chartContainer.appendChild(chart);
+            }
+            
+            // Inicializar la aplicación
+            budgetManager.loadFromStorage();
+            updateCategories();
+            updateFilterCategories();
+            renderTransactions();
+            updateSummary();
+            
+            // Event Listeners
+            transactionType.addEventListener('change', updateCategories);
+            
+            filterType.addEventListener('change', function() {
+                updateFilterCategories();
+                renderTransactions();
+            });
+            
+            filterCategory.addEventListener('change', renderTransactions);
+            
+            // Submit del formulario
+            transactionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const transaction = new Transaction(
+                    transactionType.value,
+                    document.getElementById('transaction-amount').value,
+                    categorySelect.value,
+                    document.getElementById('transaction-description').value,
+                    document.getElementById('transaction-date').value
+                );
+                
+                budgetManager.addTransaction(transaction);
+                renderTransactions();
+                updateSummary();
+                
+                // Limpiar formulario
+                transactionForm.reset();
+                document.getElementById('transaction-date').valueAsDate = new Date();
+                updateCategories();
+            });
+            
+            // Limpiar formulario
+            document.getElementById('clear-form').addEventListener('click', function() {
+                transactionForm.reset();
+                document.getElementById('transaction-date').valueAsDate = new Date();
+                updateCategories();
+            });
+            
+            // Guardar en sessionStorage (temporal)
+            document.getElementById('save-session').addEventListener('click', function() {
+                budgetManager.saveToSession();
+                alert('Datos guardados en sessionStorage (se borrarán al cerrar la pestaña o navegador)');
+            });
+            
+            // Exportar datos
+            document.getElementById('export-data').addEventListener('click', function() {
+                budgetManager.exportData();
+            });
+            
+            // Borrar todos los datos
+            document.getElementById('clear-data').addEventListener('click', function() {
+                if (budgetManager.clearAllData()) {
+                    renderTransactions();
+                    updateSummary();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

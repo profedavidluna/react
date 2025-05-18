@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Intereses - BCR</title>
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="interest-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Calculadora de Intereses Compuestos</h1>
+            <p>Planifica tus inversiones y ahorros a largo plazo</p>
+        </header>
+        
+        <main class="calculator">
+            <div class="calculator-form">
+                <h2><i class="icon">🧮</i> Datos de la Inversión</h2>
+                
+                <div class="form-group">
+                    <label for="principal">Monto inicial (₡):</label>
+                    <input type="number" id="principal" value="100000" min="0" step="10000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="rate">Tasa de interés anual (%):</label>
+                    <div class="input-with-suffix">
+                        <input type="number" id="rate" step="0.01" value="5.5" min="0" max="100">
+                        <span>%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="years">Plazo (años):</label>
+                    <input type="number" id="years" value="5" min="1" max="50">
+                </div>
+                
+                <div class="form-group">
+                    <label for="monthly">Aporte mensual (₡):</label>
+                    <input type="number" id="monthly" value="20000" min="0" step="5000">
+                </div>
+                
+                <div class="form-actions">
+                    <button id="calculate" class="btn">Calcular</button>
+                </div>
+            </div>
+            
+            <div class="calculator-results">
+                <div id="status" class="status-message">
+                    <div class="spinner"></div>
+                    <span>Calculando...</span>
+                </div>
+                
+                <div class="results-container">
+                    <h2><i class="icon">📈</i> Proyección de Crecimiento</h2>
+                    
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <small>Inversión total</small>
+                            <h3 id="total-investment">₡0</h3>
+                        </div>
+                        <div class="summary-card">
+                            <small>Intereses ganados</small>
+                            <h3 id="total-interest">₡0</h3>
+                        </div>
+                        <div class="summary-card accent">
+                            <small>Valor final</small>
+                            <h3 id="final-amount">₡0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="growth-chart"></canvas>
+                    </div>
+                    
+                    <h3>Detalle por año</h3>
+                    <table id="results" class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Año</th>
+                                <th>Monto Acumulado</th>
+                                <th>Interés Ganado</th>
+                                <th>Aportes Totales</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let growthChart;
+        let worker;
+        
+        document.getElementById('calculate').addEventListener('click', function() {
+            const status = document.getElementById('status');
+            status.style.display = 'flex';
+            
+            // Hide results container while calculating
+            document.querySelector('.results-container').style.opacity = '0.5';
+            
+            if (worker) {
+                worker.terminate();
+            }
+            
+            worker = new Worker('worker.js');
+            
+            worker.postMessage({
+                principal: parseFloat(document.getElementById('principal').value),
+                rate: parseFloat(document.getElementById('rate').value),
+                years: parseInt(document.getElementById('years').value),
+                monthlyContribution: parseFloat(document.getElementById('monthly').value)
+            });
+            
+            worker.onmessage = function(e) {
+                const results = e.data;
+                updateResults(results);
+                
+                status.style.display = 'none';
+                document.querySelector('.results-container').style.opacity = '1';
+            };
+            
+            worker.onerror = function(error) {
+                status.innerHTML = '<span>Error en el cálculo: ' + error.message + '</span>';
+                status.className = "status-message error";
+                document.querySelector('.results-container').style.opacity = '1';
+            };
+        });
+        
+        function updateResults(results) {
+            const tbody = document.getElementById('results').querySelector('tbody');
+            tbody.innerHTML = '';
+            
+            if (results.length === 0) return;
+            
+            // Update summary cards
+            const principal = parseFloat(document.getElementById('principal').value);
+            const monthly = parseFloat(document.getElementById('monthly').value);
+            const years = parseInt(document.getElementById('years').value);
+            
+            const totalInvestment = principal + (monthly * 12 * years);
+            const finalAmount = parseFloat(results[results.length - 1].amount);
+            const totalInterest = finalAmount - totalInvestment;
+            
+            document.getElementById('total-investment').textContent = '₡' + totalInvestment.toLocaleString('es-CR', {maximumFractionDigits: 2});
+            document.getElementById('total-interest').textContent = '₡' + totalInterest.toLocaleString('es-CR', {maximumFractionDigits: 2});
+            document.getElementById('final-amount').textContent = '₡' + finalAmount.toLocaleString('es-CR', {maximumFractionDigits: 2});
+            
+            // Update table
+            let cumulativeInvestment = principal;
+            
+            results.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                // Calculate yearly investment
+                const yearlyInvestment = monthly * 12;
+                cumulativeInvestment += yearlyInvestment;
+                
+                // Calculate yearly interest
+                const interest = parseFloat(row.amount) - cumulativeInvestment;
+                
+                tr.innerHTML = `
+                    <td>${row.year}</td>
+                    <td>₡${parseFloat(row.amount).toLocaleString('es-CR', {maximumFractionDigits: 2})}</td>
+                    <td>₡${interest.toLocaleString('es-CR', {maximumFractionDigits: 2})}</td>
+                    <td>₡${cumulativeInvestment.toLocaleString('es-CR', {maximumFractionDigits: 2})}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Update chart
+            updateChart(results, totalInvestment, finalAmount);
+        }
+        
+        function updateChart(results, totalInvestment, finalAmount) {
+            const ctx = document.getElementById('growth-chart').getContext('2d');
+            
+            const labels = results.map(item => `Año ${item.year}`);
+            const amounts = results.map(item => parseFloat(item.amount));
+            
+            // Calculate investment growth (linear)
+            const investmentData = [];
+            const principal = parseFloat(document.getElementById('principal').value);
+            const monthly = parseFloat(document.getElementById('monthly').value);
+            
+            let cumulativeInvestment = principal;
+            investmentData.push(cumulativeInvestment);
+            
+            for (let i = 1; i < results.length; i++) {
+                cumulativeInvestment += monthly * 12;
+                investmentData.push(cumulativeInvestment);
+            }
+            
+            if (growthChart) {
+                growthChart.destroy();
+            }
+            
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Inversión total',
+                            data: investmentData,
+                            borderColor: '#777',
+                            backgroundColor: 'rgba(119, 119, 119, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false
+                        },
+                        {
+                            label: 'Valor acumulado',
+                            data: amounts,
+                            borderColor: '#CC0000',
+                            backgroundColor: 'rgba(204, 0, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Crecimiento de la Inversión',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ₡' + context.raw.toLocaleString('es-CR');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return '₡' + value.toLocaleString('es-CR');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Calculate on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('calculate').click();
+        });
+    </script>
+</body>
+</html>

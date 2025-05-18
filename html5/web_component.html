@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Components</title>
+</head>
+<body>
+    <h2>Ejemplo de Web Component</h2>
+    <mi-tarjeta titulo="Información Importante" contenido="Este es un mensaje importante para nuestros clientes del banco."></mi-tarjeta>
+
+    <script>
+        class MiTarjeta extends HTMLElement {
+            constructor() {
+                super();
+                const shadow = this.attachShadow({ mode: 'open' });
+                const template = document.getElementById('tarjeta-template').content.cloneNode(true);
+                shadow.appendChild(template);
+                this.actualizarContenido();
+            }
+
+            static get observedAttributes() {
+                return ['titulo', 'contenido'];
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                this.actualizarContenido();
+            }
+
+            actualizarContenido() {
+                const shadowRoot = this.shadowRoot;
+                if (shadowRoot) {
+                    const tituloElem = shadowRoot.querySelector('h3');
+                    const contenidoElem = shadowRoot.querySelector('p');
+                    if (tituloElem) {
+                        tituloElem.textContent = this.getAttribute('titulo') || '';
+                    }
+                    if (contenidoElem) {
+                        contenidoElem.textContent = this.getAttribute('contenido') || '';
+                    }
+                }
+            }
+        }
+
+        customElements.define('mi-tarjeta', MiTarjeta);
+    </script>
+
+    <template id="tarjeta-template">
+        <style>
+            .tarjeta {
+                border: 1px solid #ccc;
+                padding: 15px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+            h3 {
+                margin-top: 0;
+                color: navy;
+            }
+        </style>
+        <div class="tarjeta">
+            <h3></h3>
+            <p></p>
+        </div>
+    </template>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Localizador de Cajeros - BCR</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Localizador de Cajeros Automáticos</h1>
+    
+    <button id="locate-btn">Encontrar cajeros cercanos</button>
+    
+    <div id="status"></div>
+    
+    <div id="map"></div>
+    
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('locate-btn').addEventListener('click', function() {
+            const status = document.getElementById('status');
+            status.textContent = "Buscando tu ubicación...";
+            
+            if (!navigator.geolocation) {
+                status.textContent = "Geolocalización no soportada en tu navegador";
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    status.textContent = `Ubicación encontrada! (Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)})`;
+                    
+                    // Simular datos de cajeros (en producción sería una API real)
+                    const atms = [
+                        {name: "Scotia Bank Central", lat: lat + 0.005, lng: lng + 0.005, distance: "0.5 km"},
+                        {name: "Scotia Bank San Pedro", lat: lat - 0.003, lng: lng + 0.007, distance: "0.7 km"},
+                        {name: "Scotia Bank Escazú", lat: lat + 0.008, lng: lng - 0.002, distance: "1.0 km"}
+                    ];
+                    
+                    displayResults(atms);
+                    initMap(lat, lng, atms);
+                },
+                function(error) {
+                    status.textContent = "Error al obtener ubicación: " + error.message;
+                }
+            );
+        });
+        
+        function displayResults(atms) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>Cajeros cercanos</h2>';
+            
+            const list = document.createElement('ul');
+            atms.forEach(atm => {
+                const item = document.createElement('li');
+                item.textContent = `${atm.name} - Aprox. ${atm.distance}`;
+                list.appendChild(item);
+            });
+            
+            resultsDiv.appendChild(list);
+        }
+        
+        function initMap(lat, lng, atms) {
+            // En un caso real usaríamos Google Maps API o similar
+            const mapDiv = document.getElementById('map');
+            mapDiv.innerHTML = `
+                <p>Simulación de mapa (coordenadas reales: ${lat.toFixed(4)}, ${lng.toFixed(4)})</p>
+                <p>Cajeros encontrados: ${atms.length}</p>
+                <div style="background: #eee; padding: 20px; text-align: center;">
+                    [Aquí iría el mapa interactivo en una implementación real]
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

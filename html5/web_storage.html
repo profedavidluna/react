@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Ahorros - BCR</title>
+</head>
+<body>
+    <h1>Simulador de Plan de Ahorros</h1>
+    
+    <div>
+        <label for="goal-name">Nombre de la meta:</label>
+        <input type="text" id="goal-name">
+    </div>
+    
+    <div>
+        <label for="goal-amount">Monto objetivo (₡):</label>
+        <input type="number" id="goal-amount">
+    </div>
+    
+    <div>
+        <label for="monthly-save">Ahorro mensual (₡):</label>
+        <input type="number" id="monthly-save">
+    </div>
+    
+    <button id="save-btn">Guardar Simulación</button>
+    <button id="clear-btn">Limpiar Datos</button>
+    
+    <div id="results">
+        <h2>Tus Planes de Ahorro</h2>
+        <ul id="savings-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const goal = {
+                name: document.getElementById('goal-name').value,
+                amount: document.getElementById('goal-amount').value,
+                monthly: document.getElementById('monthly-save').value,
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Guardar en localStorage
+            let savings = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            savings.push(goal);
+            localStorage.setItem('savingsGoals', JSON.stringify(savings));
+            
+            updateList();
+        });
+        
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            localStorage.removeItem('savingsGoals');
+            updateList();
+        });
+        
+        function updateList() {
+            const list = document.getElementById('savings-list');
+            list.innerHTML = '';
+            
+            const savings = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            
+            savings.forEach(goal => {
+                const li = document.createElement('li');
+                li.textContent = `${goal.name}: ₡${goal.amount} en ${Math.ceil(goal.amount/goal.monthly)} meses (${goal.date})`;
+                list.appendChild(li);
+            });
+        }
+        
+        // Cargar datos al iniciar
+        updateList();
+    </script>
+</body>
+</html>

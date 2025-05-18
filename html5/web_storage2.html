@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Storage API</title>
+</head>
+<body>
+    <h2>Preferencias de Usuario</h2>
+    <label for="colorFondo">Color de Fondo:</label>
+    <input type="color" id="colorFondo" value="#f0f0f0">
+    <button id="guardarPref">Guardar Preferencia</button>
+    <div id="mensaje"></div>
+
+    <script>
+        const colorFondoInput = document.getElementById('colorFondo');
+        const guardarPrefBtn = document.getElementById('guardarPref');
+        const mensajeDiv = document.getElementById('mensaje');
+
+        // Cargar preferencia al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorGuardado = localStorage.getItem('colorFondoUsuario');
+            if (colorGuardado) {
+                document.body.style.backgroundColor = colorGuardado;
+                colorFondoInput.value = colorGuardado;
+            }
+        });
+
+        guardarPrefBtn.addEventListener('click', function() {
+            const colorSeleccionado = colorFondoInput.value;
+            localStorage.setItem('colorFondoUsuario', colorSeleccionado);
+            document.body.style.backgroundColor = colorSeleccionado;
+            mensajeDiv.textContent = 'Preferencia guardada!';
+            setTimeout(() => {
+                mensajeDiv.textContent = '';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

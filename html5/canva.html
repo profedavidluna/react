@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfico de Gastos - BCR</title>
+    <style>
+        #expense-chart {
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gráfico de Historial de Gastos</h1>
+    
+    <div class="controls">
+        <button id="add-data">Agregar Datos Aleatorios</button>
+        <button id="clear-chart">Limpiar Gráfico</button>
+    </div>
+    
+    <canvas id="expense-chart" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('expense-chart');
+        const ctx = canvas.getContext('2d');
+        let expenseData = [];
+        
+        function drawChart() {
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (expenseData.length === 0) {
+                ctx.font = '20px Arial';
+                ctx.fillText('No hay datos para mostrar', 300, 200);
+                return;
+            }
+            
+            const padding = 50;
+            const chartWidth = canvas.width - 2 * padding;
+            const chartHeight = canvas.height - 2 * padding;
+            
+            // Ejes
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Etiquetas
+            ctx.font = '12px Arial';
+            ctx.fillText('Meses', canvas.width / 2, canvas.height - 10);
+            ctx.save();
+            ctx.translate(30, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Gastos (₡)', 0, 0);
+            ctx.restore();
+            
+            // Valores máximos para escalar
+            const maxValue = Math.max(...expenseData.map(item => item.amount));
+            const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            
+            // Línea de gráfico
+            ctx.beginPath();
+            expenseData.forEach((item, index) => {
+                const x = padding + (index * chartWidth) / (expenseData.length - 1);
+                const y = canvas.height - padding - (item.amount / maxValue) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Puntos
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Etiquetas de mes
+                ctx.fillStyle = '#000';
+                ctx.fillText(monthNames[item.month - 1], x - 10, canvas.height - padding + 20);
+            });
+            
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        
+        document.getElementById('add-data').addEventListener('click', function() {
+            // Generar datos aleatorios
+            for (let i = 1; i <= 12; i++) {
+                expenseData.push({
+                    month: i,
+                    amount: Math.floor(Math.random() * 500000) + 100000
+                });
+            }
+            
+            drawChart();
+        });
+        
+        document.getElementById('clear-chart').addEventListener('click', function() {
+            expenseData = [];
+            drawChart();
+        });
+        
+        // Dibujar canvas inicial
+        drawChart();
+    </script>
+</body>
+</html>

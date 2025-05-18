@@ -1,0 +1,9 @@
+1.- Semantic Web
+    .- Agregar una nueva sucursal con información relevante
+    .- Implementar una sección de "Servicios Digitales" usando elementos semántico
+2.- Formularios
+    .- Agregar validación para asegurar que el ingreso sea al menos el 30% del monto solicitado
+    .- Crear mensajes de error personalizados
+3.- Web Storage
+    .- Agregar opción para eliminar metas individuales
+    .- Implementar sessionStorage para simulaciones temporales
