@@ -1,0 +1,85 @@
+/* styles.css - Archivo base de estilos */
+:root {
+  /* Colores principales BCR */
+  --bcr-red: #CC0000;
+  --bcr-red-dark: #990000;
+  --bcr-red-light: #FF3333;
+  
+  /* Escala de grises */
+  --bcr-gray-dark: #333333;
+  --bcr-gray-medium: #666666;
+  --bcr-gray-light: #E0E0E0;
+  --bcr-gray-extra-light: #F5F5F5;
+  
+  /* Colores funcionales */
+  --success: #28A745;
+  --warning: #FFC107;
+  --danger: #DC3545;
+  --info: #17A2B8;
+  
+  /* Tipografía */
+  --font-primary: 'Roboto', sans-serif;
+  --font-secondary: 'Open Sans', sans-serif;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Bordes */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Espaciado */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+/* Importación de fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600;700&display=swap');
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  line-height: 1.6;
+  color: var(--bcr-gray-dark);
+  background-color: var(--bcr-gray-extra-light);
+  padding: var(--space-md);
+}
+
+/* Estilos generales para los ejercicios */
+.exercise-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+  background-color: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.exercise-header {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--bcr-red);
+}
+
+.exercise-title {
+  color: var(--bcr-red);
+  font-family: var(--font-secondary);
+  font-weight: 700;
+}
+
+.exercise-description {
+  color: var(--bcr-gray-medium);
+  margin-top: var(--space-sm);
+}

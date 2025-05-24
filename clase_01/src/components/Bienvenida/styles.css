@@ -1,0 +1,55 @@
+/* welcome-card.css */
+.welcome-card {
+  background: linear-gradient(135deg, var(--bcr-red) 0%, var(--bcr-red-dark) 100%);
+  color: white;
+  padding: var(--space-xl);
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.welcome-card h1 {
+  font-size: 2.2rem;
+  margin-bottom: var(--space-md);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-card p {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.9;
+}
+
+.welcome-card img {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  margin-bottom: var(--space-lg);
+}
+
+.promo-banner {
+  background-color: white;
+  padding: var(--space-md);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.promo-banner h2 {
+  color: var(--bcr-red);
+  margin-bottom: var(--space-sm);
+}
+
+.promo-banner button {
+  background-color: var(--bcr-gray-dark);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--space-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.promo-banner button:hover {
+  background-color: var(--bcr-red);
+  transform: translateY(-2px);
+}

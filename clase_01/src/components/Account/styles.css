@@ -1,0 +1,60 @@
+/* user-profile.css */
+.user-profile {
+  background-color: white;
+  padding: var(--space-lg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.user-profile h2 {
+  color: var(--bcr-red);
+  font-size: 1.8rem;
+  margin-bottom: var(--space-md);
+}
+
+.account-info {
+  background-color: var(--bcr-gray-extra-light);
+  padding: var(--space-md);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--space-md);
+}
+
+.account-info p {
+  margin-bottom: var(--space-sm);
+  display: flex;
+  justify-content: space-between;
+  max-width: 400px;
+}
+
+.account-info strong {
+  color: var(--bcr-gray-dark);
+  font-weight: 500;
+}
+
+.balance-projection {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: rgba(204, 0, 0, 0.05);
+  border-left: 4px solid var(--bcr-red);
+  border-radius: var(--border-radius-sm);
+}
+
+.balance-projection h3 {
+  color: var(--bcr-gray-dark);
+  font-size: 1.2rem;
+  margin-bottom: var(--space-xs);
+}
+
+.balance-message {
+  margin-top: var(--space-md);
+  font-weight: 500;
+  color: var(--bcr-gray-dark);
+}
+
+.high-balance {
+  color: var(--success);
+}
+
+.low-balance {
+  color: var(--danger);
+}
