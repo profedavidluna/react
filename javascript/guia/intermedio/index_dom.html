@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS DOM Manipulation</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #mi-parrafo { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; }
+        .elemento-clase { margin-bottom: 10px; padding: 5px; border: 1px dashed gray; }
+        .resaltado { background-color: yellow; font-weight: bold; }
+        #cuadro-eventos { width: 150px; height: 100px; background-color: lightgray; border: 1px solid black; margin-top: 20px; display: flex; align-items: center; justify-content: center; }
+        #input-texto { width: 200px; padding: 5px; margin-top: 10px; }
+        .nueva-clase-dinamica { background-color: lightblue; padding: 10px; border: 1px solid blue; margin-top: 10px; }
+        .eliminable { background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Manipulación del DOM con JavaScript</h1>
+
+    <h2>Sección de Selección de Elementos</h2>
+    <p id="mi-parrafo">Este es un párrafo con un ID.</p>
+    <div class="elemento-clase">Soy un div con clase.</div>
+    <div class="elemento-clase">Soy otro div con clase.</div>
+    <span>Soy un span.</span>
+    <button id="mi-boton">Haz clic aquí</button>
+    <img id="mi-imagen" src="https://via.placeholder.com/150/FF6347/FFFFFF?text=Imagen" alt="Imagen de ejemplo">
+
+    <h2>Sección de Modificación de Elementos</h2>
+    <div id="contenedor-modificar">
+        <p>Este es el texto original del contenedor.</p>
+    </div>
+
+    <h2>Sección de Event Listeners</h2>
+    <div id="cuadro-eventos">Pasa el mouse</div>
+    <input type="text" id="input-texto" placeholder="Escribe algo aquí">
+
+    <h2>Sección de Contenido Dinámico</h2>
+    <ul id="lista-dinamica">
+        <li>Ítem existente 1</li>
+        <li>Ítem existente 2</li>
+    </ul>
+    <p id="parrafo-a-eliminar" class="eliminable">Este párrafo será eliminado.</p>
+    <div id="reemplazar-este">Este div será reemplazado.</div>
+
+    <script src="01_selecting_elements.js"></script>
+    </body>
+</html>

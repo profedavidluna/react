@@ -1,0 +1,11 @@
+/* css/grid-layout.css */
+
+.posts-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 300px min, ocupa espacio disponible */
+    gap: 25px; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra el grid si hay espacio */
+}
+
+/* Con `repeat(auto-fill, minmax(300px, 1fr))` no se necesitan media queries tan específicas
+   para el número de columnas, el grid se adapta automáticamente. */

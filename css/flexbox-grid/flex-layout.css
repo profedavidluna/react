@@ -1,0 +1,28 @@
+/* css/flexbox-layout.css */
+
+.posts-flexbox-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente línea */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    gap: 25px; /* Espacio entre las tarjetas */
+}
+
+.posts-flexbox-container .post-card {
+    flex: 1 1 calc(33.33% - 25px); /* Por defecto 3 columnas, ajusta el tamaño */
+    max-width: 350px; /* Ancho máximo para la tarjeta */
+    min-width: 280px; /* Ancho mínimo para la tarjeta */
+}
+
+/* Flexbox Responsive adjustments */
+@media (max-width: 992px) {
+    .posts-flexbox-container .post-card {
+        flex: 1 1 calc(50% - 25px); /* 2 columnas en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .posts-flexbox-container .post-card {
+        flex: 1 1 100%; /* 1 columna en pantallas pequeñas */
+        max-width: 450px; /* Un poco más de ancho para centrar una sola tarjeta */
+    }
+}
