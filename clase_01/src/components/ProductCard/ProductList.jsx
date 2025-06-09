@@ -1,0 +1,56 @@
+import React from 'react';
+import ProductCard from './ProductCard';
+
+function ProductList() {
+  const productsData = [
+    {
+      "title": "Préstamo Personal Rápido",
+      "description": "Obtén el dinero que necesitas en 24 horas para cualquier emergencia o proyecto personal.",
+      "interestRate": 12.5,
+      "minimum": 100000
+    },
+    {
+      "title": "Crédito para Vivienda Flexible",
+      "description": "Haz realidad el sueño de tu casa propia con nuestras opciones de financiación a largo plazo.",
+      "interestRate": 8.9,
+      "minimum": 50000000
+    },
+    {
+      "title": "Tarjeta de Crédito con Recompensas",
+      "description": "Acumula puntos y beneficios con cada compra. Disfruta de ofertas exclusivas.",
+      "interestRate": 25.0,
+      "minimum": 0
+    },
+    {
+      "title": "Préstamo para Pequeñas Empresas",
+      "description": "Impulsa tu negocio con capital de trabajo o para invertir en crecimiento.",
+      "interestRate": 10.2,
+      "minimum": 500000
+    },
+    {
+      "title": "Ahorro Programado",
+      "description": "Planifica tus metas financieras con un ahorro que te genera intereses.",
+      "interestRate": 4.0,
+      "minimum": 10000
+    }
+  ];
+
+  return (
+    <div className="product-list-container">
+      <h2>Nuestros Productos</h2>
+      <div className="product-cards-wrapper">
+        {productsData.map((product, index) => (
+          <ProductCard
+            key={index} 
+            title={product.title}
+            description={product.description}
+            interestRate={product.interestRate}
+            minimum={product.minimum}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default ProductList;

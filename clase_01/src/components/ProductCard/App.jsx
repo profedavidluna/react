@@ -1,4 +1,6 @@
 import ProductCard from './ProductCard';
+import ProductList from './ProductList';
+import ProductListJson from './ProductListJson';
 import './styles.css'; 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
           interestRate={5.2}
           minimum={50000}
         />
+        <ProductList></ProductList>
+        <ProductListJson></ProductListJson>
       </div>
     </div>
   );
