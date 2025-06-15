@@ -10,7 +10,7 @@ function ContadorSimple() {
     // 2. Actualizar el estado usando la función setContador.
     //    Usamos la forma de callback (prevState) para asegurarnos de que siempre
     //    estamos trabajando con el valor más reciente del estado.
-    setContador(prevContador => prevContador + 1);
+    setContador(prevContador =>  prevContador + 1);
   };
 
   // Función para manejar el decremento
