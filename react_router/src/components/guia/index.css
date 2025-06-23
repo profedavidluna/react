@@ -1,0 +1,106 @@
+/* Reset básicos */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f7f6;
+  color: #333;
+}
+
+/* Estilos del Layout (App.jsx) */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #20232a; /* Azul oscuro de React */
+  color: white;
+  padding: 15px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-nav {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.main-nav a {
+  color: #61dafb; /* Azul claro de React */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.main-nav a:hover {
+  background-color: #333;
+  color: white;
+}
+
+.main-nav .active-link {
+  background-color: #61dafb;
+  color: #20232a;
+}
+
+.app-main-content {
+  flex-grow: 1; /* Hace que ocupe todo el espacio restante */
+  padding: 20px;
+  max-width: 900px; /* Limita el ancho del contenido para mejor lectura */
+  margin: 20px auto; /* Centra el contenido */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.app-footer {
+  background-color: #eee;
+  color: #666;
+  padding: 15px 20px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+/* Estilos generales de página */
+.page-content {
+  padding: 10px 0;
+}
+
+.page-content h2 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* Estilo para NotFoundPage */
+.not-found-page {
+  text-align: center;
+  color: #dc3545;
+}
+.not-found-page h2 {
+  color: #dc3545;
+}
+.not-found-page .link-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+.not-found-page .link-button:hover {
+  background-color: #0056b3;
+}
