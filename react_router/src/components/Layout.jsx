@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import DataContext from '../context/DataContext';
+function Layout () {
 
-function Layout() {
+  const ctx = useContext(DataContext);
+  ctx.valor1="Menu Cambiado";
+  ctx.valor3={
+      "data1":"Prueba Context"
+  }
   return (
     // ¡ESTE DIV ES CLAVE!
     <div style={{
@@ -43,6 +49,15 @@ function Layout() {
                 Productos
               </NavLink>
             </li>
+             <li>
+              <NavLink
+                to="/blog"
+                className={({ isActive }) => (isActive ? 'active-link' : 'normal-link')}
+              >
+                Blog
+              </NavLink>
+            </li>
+            <li>{ctx.valor3.data1}</li>
           </ul>
         </nav>
       </header>
@@ -57,6 +72,7 @@ function Layout() {
         width: '100%', /* Ocupa el 100% del ancho disponible */
       }}>
         <Outlet />
+        Aqui van el componente hijo
       </main>
 
       <footer style={{ backgroundColor: '#f0f0f0', padding: '15px', textAlign: 'center', borderTop: '1px solid #ddd' }}>

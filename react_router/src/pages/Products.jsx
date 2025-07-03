@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {user} from 'react';
 import { Link } from 'react-router-dom';
 
 const products2 = [
@@ -6,8 +6,11 @@ const products2 = [
   { id: '2', name: 'Monitor UltraWide', description: 'Experimenta una inmersión visual total.' },
   { id: '3', name: 'Teclado Mecánico RGB', description: 'Teclado de alto rendimiento para gaming.' },
 ];
+//UseEffect llame al Endpoint localhost:3000/productos
 
 function Products() {
+
+
   return (
     <div>
       <h2>Nuestros Productos</h2>

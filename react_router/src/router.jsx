@@ -5,6 +5,11 @@ import Products from './pages/Products.jsx'
 import ProductDetail from './pages/ProductDetail.jsx';
 import NotFound from './pages/NotFound.jsx'; // Componente para rutas no encontradas
 import Layout from './components/Layout.jsx'; // Un layout para tu app
+import SubMenuLayout from './components/SubMenuLayout.jsx'; // Un layout para tu app
+import Tecnologia from './pages/Tecnologia.jsx';
+import Gastronomia from './pages/Gastronomia.jsx';
+import Viaje from './pages/Viaje.jsx';
+import Blog from './pages/Blog.jsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +33,24 @@ const router = createBrowserRouter([
         path: 'products/:productId', // Parámetro de ruta. Accedes con useParams()
         element: <ProductDetail />,
       },
+      {
+        path:'blog',
+        element: <SubMenuLayout
+          title="Nuestro Blog"
+          menuItems={[
+            { label: 'Últimos Artículos', path: '', end: true }, // Ruta vacía para el índice
+            { label: 'Tecnología', path: '/tecnologia' },
+            { label: 'Gastronomía', path: '/gastronomia' },
+            { label: 'Viajes', path: '/viajes' },
+          ]}
+        />,
+        children: [
+          { path:"",index: true, element: <Blog /> }, // Contenido por defecto para /blog
+          { path: 'tecnologia', element: <Tecnologia /> },
+          { path: 'gastronomia', element: <Gastronomia /> },
+          { path: 'viajes', element: <Viaje /> },
+        ],
+      }
       // Puedes añadir una ruta de "catch-all" si no usas errorElement en el padre
       // {
       //   path: '*',
