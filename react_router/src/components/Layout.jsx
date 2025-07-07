@@ -57,6 +57,14 @@ function Layout () {
                 Blog
               </NavLink>
             </li>
+                         <li>
+              <NavLink
+                to="/forms"
+                className={({ isActive }) => (isActive ? 'active-link' : 'normal-link')}
+              >
+                Forms
+              </NavLink>
+            </li>
             <li>{ctx.valor3.data1}</li>
           </ul>
         </nav>

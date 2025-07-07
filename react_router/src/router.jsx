@@ -10,6 +10,11 @@ import Tecnologia from './pages/Tecnologia.jsx';
 import Gastronomia from './pages/Gastronomia.jsx';
 import Viaje from './pages/Viaje.jsx';
 import Blog from './pages/Blog.jsx';
+import ReactHookFormMini from './components/forms/ReactHookFormMini.jsx';
+import LoginForm from './components/forms/LoginForm.jsx';
+import RegistroForm from './components/forms/RegistroForm.jsx';
+import RegistroForm2 from './components/forms/RegistroForm2.jsx';
+import ReactHookFormAdvanced from './components/forms/ReactHookFormAdvanced.jsx';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +54,27 @@ const router = createBrowserRouter([
           { path: 'tecnologia', element: <Tecnologia /> },
           { path: 'gastronomia', element: <Gastronomia /> },
           { path: 'viajes', element: <Viaje /> },
+        ],
+      },
+      {
+        path:'forms',
+        element: <SubMenuLayout
+          title="Practica de Forms"
+          menuItems={[
+            { label: 'Basico', path: '', end: true }, // Ruta vacía para el índice
+            { label: 'Login', path: '/login' },
+            { label: 'registro', path: '/registro' },
+            { label: 'registro2', path: '/registro2' },
+             { label: 'avanzado', path: '/avanzado' },
+          ]}
+        />,
+        children: [
+          { path:"",index: true, element: <ReactHookFormMini /> }, // Contenido por defecto para /blog
+          { path: 'login', element: <LoginForm /> },
+          { path: 'registro', element: <RegistroForm /> },
+          { path: 'registro2', element: <RegistroForm2 /> },
+          { path: 'avanzado', element: <ReactHookFormAdvanced /> },
+
         ],
       }
       // Puedes añadir una ruta de "catch-all" si no usas errorElement en el padre
